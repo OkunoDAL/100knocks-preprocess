@@ -15,6 +15,11 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
+# sudoで実行時コマンドが見つからないエラーが出る場合があったので、/etc/sudoersの env_reset オプションをjovyanのみ無効化
+# jovyanがパスワードの確認無しで全てのコマンドを実行できる文言を/etc/sudoersに追記
+RUN echo "Defaults:jovyan !env_reset" /etc/sudoers &&\
+    echo "jovyan  ALL=(ALL) NOPASSWD : ALL" >> /etc/sudoers
+    
 USER jovyan
 WORKDIR /home/jovyan
 COPY Pipfile .
